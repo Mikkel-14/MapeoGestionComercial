@@ -43,7 +43,7 @@ export class AppController {
           });
   }
 
-  @Get('existencias')
+  @Post('existencias')
     verificarExistencias(@Body() body, @Res() response: Response){
       console.log(body);
       response.status(200).send({valor:false});
