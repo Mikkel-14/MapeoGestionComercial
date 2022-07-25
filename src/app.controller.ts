@@ -27,21 +27,17 @@ export class AppController {
       this.appService.leerDetallePedido(idPedido)
           .subscribe({
               next: value => {
-                  let dummy = [
-                      {
-                          "Código": "PAV001",
-                          "Nombre": "Pavita",
-                          "Precio Unitario": "29.75",
-                          "Cantidad": "133"
-                      },
-                      {
-                          "Código": "PAV002",
-                          "Nombre": "Pavita",
-                          "Precio Unitario": "32",
-                          "Cantidad": "233"
-                      }
-                  ];
-                  response.status(200).send({"tabla": dummy});
+                  let detallePedido:any[] = value.data;
+                  response.status(200).send({"tabla": detallePedido.map(
+                          (detalleObj) =>{
+                              return {
+                                  "Código": detalleObj.codigo_producto,
+                                  "Nombre": detalleObj.nombre_producto,
+                                  "Precio Unitario": detalleObj.precio_producto,
+                                  "Cantidad": detalleObj.cantidad_producto
+                              }
+                          }
+                      )});
               }
           });
   }
