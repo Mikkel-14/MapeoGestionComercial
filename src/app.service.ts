@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {HttpService} from "@nestjs/axios";
+import {Subject} from "rxjs";
 
 @Injectable()
 export class AppService {
@@ -59,6 +60,62 @@ export class AppService {
                       'Content-Type': 'application/json'
                   }}
               );
+  }
+
+  verificarExistencias(idPedido){
+      let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/list?dbase=Inventario&paramName=IdCatalogoProducto&paramValue=`;
+      let resultadoExistencias = new Subject()
+      this.leerDetallePedido(idPedido)
+          .subscribe({
+              next: value => {
+                  const detallePedido:any[] = value.data;
+                  let existenSuficientes = true;
+                  let llamadasAComprobar = new Subject();
+                  llamadasAComprobar.subscribe(
+                      {
+                          next: numLlamadas => {
+                              if (numLlamadas === detallePedido.length){
+                                  llamadasAComprobar.complete();
+                              }
+                          },
+                          complete: () =>{
+                            resultadoExistencias.next(existenSuficientes);
+                          }
+                      }
+
+                  );
+                  detallePedido.forEach(
+                      (ordenProucto, indice) => {
+                          let codigoProducto:string = ordenProucto.codigo_producto;
+                          this.httpClient
+                              .get(url + codigoProducto,
+                                  {headers: {
+                                          'Content-Type': 'application/json'
+                                      }}
+                              )
+                              .subscribe({
+                                  next: result =>{
+                                      let datosInventario:any[] = result.data;
+                                      const existencias:number = datosInventario.reduce(
+                                          (accumulator, curentVal) => {
+                                              let disponibilidad = +curentVal.Stock
+                                              return accumulator + disponibilidad;
+                                          },
+                                          0
+                                      );
+                                      let cantidadProducto = ordenProucto.cantidad_producto;
+                                      existenSuficientes = existenSuficientes && cantidadProducto <= existencias;
+                                      llamadasAComprobar.next(indice+1);
+                                  }
+                              })
+
+                      }
+                  );
+
+              }
+          });
+
+      return resultadoExistencias.asObservable();
   }
 }
 

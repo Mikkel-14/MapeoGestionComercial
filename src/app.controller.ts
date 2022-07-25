@@ -45,8 +45,15 @@ export class AppController {
 
   @Post('existencias')
     verificarExistencias(@Body() body, @Res() response: Response){
-      console.log(body);
-      response.status(200).send({valor:false});
+      const idPedido = body.id;
+      this.appService.verificarExistencias(idPedido)
+          .subscribe(
+              {
+                  next: resultado => {
+                      response.status(200).send({valor:resultado});
+                  }
+              }
+          );
   }
 
 }
