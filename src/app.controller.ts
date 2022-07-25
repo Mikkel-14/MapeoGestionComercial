@@ -27,7 +27,21 @@ export class AppController {
       this.appService.leerDetallePedido(idPedido)
           .subscribe({
               next: value => {
-                  response.status(200).send({"tabla": JSON.stringify(value.data)});
+                  let dummy = [
+                      {
+                          "Código": "PAV001",
+                          "Nombre": "Pavita",
+                          "Precio Unitario": "29.75",
+                          "Cantidad": "133"
+                      },
+                      {
+                          "Código": "PAV002",
+                          "Nombre": "Pavita",
+                          "Precio Unitario": "32",
+                          "Cantidad": "233"
+                      }
+                  ];
+                  response.status(200).send({"tabla": dummy});
               }
           });
   }
