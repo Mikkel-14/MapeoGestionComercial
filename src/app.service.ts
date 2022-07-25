@@ -28,7 +28,7 @@ export class AppService {
   registrarDetallePedido(id, datosTabla:any[]){
     let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/orden_pedido_detalle_com`;
     datosTabla.forEach(
-        (producto)=>{
+        (producto, index)=>{
           let registroBase = {
             "id_pedido": id,
             "nombre_producto": producto.Nombre,
@@ -46,7 +46,14 @@ export class AppService {
                   'X-Username': 'cesar.leon03@epn.edu.ec'
                 }}
               )
-              .subscribe()
+              .subscribe({
+                  next: value => {
+                      console.log(`Elemento ${index} del arreglo procesado con exito`, value.data)
+                  },
+                  error: value => {
+                      console.log(`Error en ${index}`);
+                  }
+              })
         }
     );
 
