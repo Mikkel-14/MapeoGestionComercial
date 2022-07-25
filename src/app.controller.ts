@@ -28,16 +28,17 @@ export class AppController {
           .subscribe({
               next: value => {
                   let detallePedido:any[] = value.data;
-                  response.status(200).send({"tabla": detallePedido.map(
-                          (detalleObj) =>{
-                              return {
-                                  "Código": detalleObj.codigo_producto,
-                                  "Nombre": detalleObj.nombre_producto,
-                                  "Precio Unitario": detalleObj.precio_producto,
-                                  "Cantidad": detalleObj.cantidad_producto
-                              }
+                  let infoAEnviar = detallePedido.map(
+                      (detalleObj) =>{
+                          return {
+                              "Código": `${detalleObj.codigo_producto}`,
+                              "Nombre": `${detalleObj.nombre_producto}`,
+                              "Precio Unitario": `${detalleObj.precio_producto}`,
+                              "Cantidad": `${detalleObj.cantidad_producto}`
                           }
-                      )});
+                      }
+                  );
+                  response.status(200).send({"tabla": infoAEnviar});
               }
           });
   }
