@@ -21,7 +21,7 @@ export class AppController {
 
   }
 
-  @Get('pedido')
+  @Post('pedido-detalle')
     detallePedido(@Body() body, @Res() response: Response){
       let idPedido = body.id
       this.appService.leerDetallePedido(idPedido)
