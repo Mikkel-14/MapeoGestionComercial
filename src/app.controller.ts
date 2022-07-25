@@ -20,4 +20,15 @@ export class AppController {
         })
 
   }
+
+  @Get('pedido')
+    detallePedido(@Body() body, @Res() response: Response){
+      let idPedido = body.id
+      this.appService.leerDetallePedido(idPedido)
+          .subscribe({
+              next: value => {
+                  response.status(200).send(value.data);
+              }
+          });
+  }
 }

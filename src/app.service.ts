@@ -50,5 +50,15 @@ export class AppService {
     );
 
   }
+
+  leerDetallePedido(idPedido){
+      let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/list?dbase=orden_pedido_detalle_com&paramName=id_pedido&paramValue=${idPedido}`;
+      return this.httpClient
+          .get(url,
+              {headers: {
+                      'Content-Type': 'application/json'
+                  }}
+              );
+  }
 }
 
