@@ -52,7 +52,7 @@ export class AppController {
                           "Cantidad": "233"
                       }
                   ];
-                  response.status(200).send({"tabla": dummy});
+                  response.status(200).send({"tabla": JSON.stringify(dummy)});
               }
           });
   }
