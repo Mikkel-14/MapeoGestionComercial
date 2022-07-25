@@ -14,8 +14,14 @@ export class AppController {
           next: (returnedInfo) =>{
             let registerId = returnedInfo.data.id;
             let detallePedido: any[] = body.tabla;
-            this.appService.registrarDetallePedido(registerId,detallePedido);
-            response.status(201).send({"idPedido": registerId});
+            this.appService.registrarDetallePedido(registerId,detallePedido)
+                .subscribe(
+                    {
+                        complete: () => {
+                            response.status(201).send({"idPedido": registerId});
+                        }
+                    }
+                );
           }
         })
 

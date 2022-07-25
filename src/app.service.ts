@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {HttpService} from "@nestjs/axios";
-import {Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 
 @Injectable()
 export class AppService {
@@ -27,7 +27,7 @@ export class AppService {
 
   registrarDetallePedido(id, datosTabla:any[]){
     let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/orden_pedido_detalle_com`;
-    datosTabla.forEach(
+    let productosARegistrar = datosTabla.map(
         (producto, index)=>{
           let registroBase = {
             "id_pedido": id,
@@ -36,7 +36,7 @@ export class AppService {
             "cantidad_producto": producto.Cantidad,
             "precio_producto": producto["Precio Unitario"]
           };
-          this.httpClient
+          return this.httpClient
               .put(
               url,
               registroBase,
@@ -46,17 +46,31 @@ export class AppService {
                   'X-Username': 'cesar.leon03@epn.edu.ec'
                 }}
               )
-              .subscribe({
-                  next: value => {
-                      console.log(`Elemento ${index} del arreglo procesado con exito`, value.data)
-                  },
-                  error: value => {
-                      console.log(`Error en ${index}`);
-                  }
-              })
         }
     );
+    let controladorDeRegistro = new Subject();
+    this.registroProductoRecursivo(productosARegistrar,controladorDeRegistro);
+    return controladorDeRegistro;
+  }
 
+  private registroProductoRecursivo(arregloProductos:Observable<any>[], controlador:Subject<any>){
+      //caso base
+      if(arregloProductos.length == 0){
+          return controlador.complete();
+      }
+      else //caso recursivo
+      {
+          let detalleProducto = arregloProductos.pop();
+          detalleProducto.subscribe(
+              {
+                  next: resultado =>{
+                      console.log(`Elemento ${arregloProductos.length+1} del arreglo procesado con exito`, resultado.data);
+                      controlador.next(resultado.data);
+                      this.registroProductoRecursivo(arregloProductos, controlador);
+                  }
+              }
+          );
+      }
   }
 
   leerDetallePedido(idPedido){
