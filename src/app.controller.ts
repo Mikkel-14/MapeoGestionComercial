@@ -27,7 +27,7 @@ export class AppController {
       this.appService.leerDetallePedido(idPedido)
           .subscribe({
               next: value => {
-                  response.status(200).send(value.data);
+                  response.status(200).send({"tabla": value.data});
               }
           });
   }
