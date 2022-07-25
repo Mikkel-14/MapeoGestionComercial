@@ -28,7 +28,7 @@ export class AppController {
           .subscribe({
               next: value => {
                   let detallePedido:any[] = value.data;
-                  let infoAEnviar: DetallePedidoInterface[] = detallePedido.map(
+                  let infoAEnviar = detallePedido.map(
                       (detalleObj) =>{
                           return {
                               "Código": `${detalleObj.codigo_producto}`,
