@@ -28,48 +28,24 @@ export class AppController {
           .subscribe({
               next: value => {
                   let detallePedido:any[] = value.data;
-                  // let infoAEnviar: DetallePedidoInterface[] = detallePedido.map(
-                  //     (detalleObj) =>{
-                  //         return {
-                  //             "Cod": `${detalleObj.codigo_producto}`,
-                  //             "Nombre": `${detalleObj.nombre_producto}`,
-                  //             "Precio Unitario": `${detalleObj.precio_producto}`,
-                  //             "Cantidad": `${detalleObj.cantidad_producto}`
-                  //         }
-                  //     }
-                  // );
-                  const infoAEnviar = this.transformarDetalle(detallePedido);
-                  let dummy = [
-                      {
-                          "Cod": "PAV001",
-                          "Nombre": "Pavita",
-                          "Precio Unitario": "29.75",
-                          "Cantidad": "133"
-                      },
-                      {
-                          "Cod": "PAV002",
-                          "Nombre": "Pavita",
-                          "Precio Unitario": "32",
-                          "Cantidad": "233"
+                  let infoAEnviar: DetallePedidoInterface[] = detallePedido.map(
+                      (detalleObj) =>{
+                          return {
+                              "Cod": `${detalleObj.codigo_producto}`,
+                              "Nombre": `${detalleObj.nombre_producto}`,
+                              "Precio Unitario": `${detalleObj.precio_producto}`,
+                              "Cantidad": `${detalleObj.cantidad_producto}`
+                          }
                       }
-                  ];
+                  );
                   response.status(200).send({"tabla": infoAEnviar});
               }
           });
   }
 
-  transformarDetalle(arreglo:any[]){
-      let detalleAEnviar:DetallePedidoInterface[] = [];
-      arreglo.forEach(
-          (elemento) => {
-              detalleAEnviar.push({
-                  "Cod": `${elemento.codigo_producto}`,
-                  "Nombre": `${elemento.nombre_producto}`,
-                  "Precio Unitario": `${elemento.precio_producto}`,
-                  "Cantidad": `${elemento.cantidad_producto}`
-              })
-          }
-      );
-      return detalleAEnviar;
+  @Get('existencias')
+    verificarExistencias(@Body() body, @Res() response: Response){
+      console.log(body);
   }
+
 }
