@@ -31,7 +31,7 @@ export class AppController {
                   let infoAEnviar: DetallePedidoInterface[] = detallePedido.map(
                       (detalleObj) =>{
                           return {
-                              "Cod": `${detalleObj.codigo_producto}`,
+                              "Código": `${detalleObj.codigo_producto}`,
                               "Nombre": `${detalleObj.nombre_producto}`,
                               "Precio Unitario": `${detalleObj.precio_producto}`,
                               "Cantidad": `${detalleObj.cantidad_producto}`
