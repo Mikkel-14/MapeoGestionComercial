@@ -64,7 +64,6 @@ export class AppService {
           detalleProducto.subscribe(
               {
                   next: resultado =>{
-                      console.log(`Elemento ${arregloProductos.length+1} del arreglo procesado con exito`, resultado.data);
                       controlador.next(resultado.data);
                       this.registroProductoRecursivo(arregloProductos, controlador);
                   }
