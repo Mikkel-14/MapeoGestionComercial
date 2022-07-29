@@ -72,6 +72,7 @@ export class AppController {
           "extraGrande": 0,
           "extra2Grande": 0
       };
+      console.log(body.restarStock, typeof  body.restarStock);
       this.appService.leerDetallePedido(body.idPedido)
           .subscribe(
               {
