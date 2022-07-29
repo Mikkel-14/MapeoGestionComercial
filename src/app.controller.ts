@@ -100,7 +100,12 @@ export class AppController {
                               }
                           }
                       );
-                      response.status(200).send({direccionEntrega, ...detalleProductos});
+                      this.appService.generarOrdenEntrega(body.idPedido, body.restarStock)
+                          .subscribe({
+                              complete: ()=>{
+                                  response.status(200).send({direccionEntrega, ...detalleProductos});
+                              }
+                          })
                   }
               }
           );
