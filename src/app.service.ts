@@ -116,15 +116,13 @@ export class AppService {
                               .subscribe({
                                   next: result =>{
                                       let datosInventario:any[] = result.data;
-                                      const existencias:number = datosInventario.reduce(
-                                          (accumulator, curentVal) => {
-                                              let disponibilidad = +curentVal.Stock
-                                              return accumulator + disponibilidad;
-                                          },
-                                          0
-                                      );
-                                      let cantidadProducto = ordenProucto.cantidad_producto;
-                                      existenSuficientes = existenSuficientes && cantidadProducto <= existencias;
+                                      const existencias:number = +datosInventario.filter(
+                                          currentVal => {
+                                              return currentVal.IdPlanta == 1;
+                                          }
+                                      )[0]["Stock"];
+                                      let cantidadProducto = +ordenProucto.cantidad_producto;
+                                      existenSuficientes = existenSuficientes && (cantidadProducto <= existencias);
                                       llamadasAComprobar.next(indice+1);
                                   }
                               })
