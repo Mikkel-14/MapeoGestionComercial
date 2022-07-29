@@ -62,4 +62,48 @@ export class AppController {
           );
   }
 
+  @Post('scm')
+    transformarDireccionyDetalle(@Body() body, @Res() response: Response){
+      const direccionEntrega = `${body.direccionEspecifica}, ${body.ciudad}, ${body.provincia}`;
+      let detalleProductos = {
+          "pavita":0,
+          "mediano": 0,
+          "grande": 0,
+          "extraGrande": 0,
+          "extra2Grande": 0
+      };
+      this.appService.leerDetallePedido(body.idPedido)
+          .subscribe(
+              {
+                  next: value =>{
+                      const detallePedido:any[] = value.data;
+                      detallePedido.forEach(
+                          (ordenProducto) => {
+                              let cantidadProducto = ordenProducto.cantidad_producto;
+                              let codigoProducto:string = ordenProducto.codigo_producto;
+                              switch (codigoProducto){
+                                  case "PAV001":
+                                      detalleProductos.pavita = cantidadProducto;
+                                      break;
+                                  case "PAV002":
+                                      detalleProductos.mediano = cantidadProducto;
+                                      break;
+                                  case "PAV003":
+                                      detalleProductos.grande = cantidadProducto;
+                                      break;
+                                  case "PAV004":
+                                      detalleProductos.extraGrande = cantidadProducto;
+                                      break;
+                                  case "PAV005":
+                                      detalleProductos.extra2Grande = cantidadProducto;
+                                      break;
+                              }
+                          }
+                      );
+                      response.status(200).send({direccionEntrega, ...detalleProductos});
+                  }
+              }
+          );
+  }
+
 }
