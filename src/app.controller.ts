@@ -65,6 +65,7 @@ export class AppController {
   @Post('scm')
     transformarDireccionyDetalle(@Body() body, @Res() response: Response){
       const direccionEntrega = `${body.direccionEspecifica}, ${body.ciudad}, ${body.provincia}`;
+      console.log(body.comprobanteSubido);
       let detalleProductos = {
           "pavita":0,
           "mediano": 0,
