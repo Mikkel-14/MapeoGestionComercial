@@ -72,7 +72,6 @@ export class AppController {
           "extraGrande": 0,
           "extra2Grande": 0
       };
-      console.log(body.restarStock, typeof  body.restarStock);
       this.appService.leerDetallePedido(body.idPedido)
           .subscribe(
               {
@@ -101,7 +100,7 @@ export class AppController {
                               }
                           }
                       );
-                      this.appService.generarOrdenEntrega(body.idPedido, body.restarStock)
+                      this.appService.generarOrdenEntrega(body.idPedido, body.restarStock == "true")
                           .subscribe({
                               complete: ()=>{
                                   response.status(200).send({direccionEntrega, ...detalleProductos});
