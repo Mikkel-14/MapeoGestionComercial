@@ -162,6 +162,20 @@ export class AppService {
                               .subscribe({
                                   next: value => {
                                       const detallePedido:any[] = value.data;
+                                      let llamadasAComprobar = new Subject();
+                                      llamadasAComprobar.subscribe(
+                                          {
+                                              next: numLlamadas => {
+                                                  if (numLlamadas === detallePedido.length){
+                                                      llamadasAComprobar.complete();
+                                                  }
+                                              },
+                                              complete: () =>{
+                                                  this.actualizacionDeInventarioRecursiva(arregloActualizacionesInventario, controladorDeRegistro);
+                                              }
+                                          }
+
+                                      );
                                       detallePedido.forEach(
                                           (ordenProucto, indice) => {
                                               let codigoProducto:string = ordenProucto.codigo_producto;
@@ -181,23 +195,21 @@ export class AppService {
                                                           )[0];
                                                           let cantidadProducto = +ordenProucto.cantidad_producto;
                                                           let productoSobrante = +existencias["Stock"] - cantidadProducto;
-                                                          arregloActualizacionesInventario.push(
-                                                              this.httpClient.put(
-                                                                  urlInventarios,
-                                                                  {
-                                                                      "Id": existencias["Id"],
-                                                                      "Stock": productoSobrante
-                                                                  },
-                                                                  CABECERAS_ACTUALIZACION
-                                                              )
+                                                          let peticionActualizacion = this.httpClient.put(
+                                                              urlInventarios,
+                                                              {
+                                                                  "Id": existencias["Id"],
+                                                                  "Stock": productoSobrante
+                                                              },
+                                                              CABECERAS_ACTUALIZACION
                                                           );
+                                                          arregloActualizacionesInventario.push(peticionActualizacion);
+                                                          llamadasAComprobar.next(indice+1);
                                                       }
                                                   })
 
                                           }
                                       );
-                                      this.actualizacionDeInventarioRecursiva(arregloActualizacionesInventario, controladorDeRegistro)
-
                                   }
                               });
                       }
