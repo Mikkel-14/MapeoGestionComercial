@@ -105,7 +105,7 @@ export class AppController {
                               }
                           }
                       );
-                      this.appService.generarOrdenEntrega(body.idPedido, body.restarStock == "true")
+                      this.appService.generarOrdenEntrega(body.idPedido, body.restarStock == "true", body.fechaEntrega)
                           .subscribe({
                               complete: ()=>{
                                   this.appService.leerPrecioProductos()

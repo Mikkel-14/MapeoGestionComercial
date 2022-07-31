@@ -136,7 +136,7 @@ export class AppService {
       return resultadoExistencias.asObservable();
   }
 
-  generarOrdenEntrega(idPedido, debeDescontar:boolean){
+  generarOrdenEntrega(idPedido, debeDescontar:boolean, fechaEntrega){
       const CABECERAS_ACTUALIZACION = {headers:{
               'Content-Type': 'application/json',
               'X-Api-Key': this.apiKey,
@@ -150,7 +150,9 @@ export class AppService {
       this.httpClient.put(
           urlPedido,
           {"Id": idPedido,
-              "estado": "confirmado"},
+              "estado": "confirmado",
+              "fecha_entrega": fechaEntrega
+          },
           CABECERAS_ACTUALIZACION
       )
           .subscribe(
