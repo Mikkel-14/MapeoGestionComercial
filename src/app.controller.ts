@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Res} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Res} from '@nestjs/common';
 import { AppService } from './app.service';
 import {Response} from "express";
 
@@ -25,6 +25,17 @@ export class AppController {
           }
         })
 
+  }
+
+  @Get('pedido/:id')
+  leerCabeceraPedido(@Res() response: Response, @Param() params){
+        this.appService
+            .leerPedido(params.id)
+            .subscribe({
+                next: value => {
+                    response.status(200).send({"fecha": value.data.fecha_entrega});
+                }
+            });
   }
 
   @Post('pedido-detalle')

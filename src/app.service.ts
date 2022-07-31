@@ -25,6 +25,17 @@ export class AppService {
       }})
   }
 
+  leerPedido(idPedido){
+      let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/orden_pedido_com?paramName=Id&paramValue=${idPedido}`;
+      return this.httpClient
+          .get(
+              url,
+              {headers:{
+                      'Content-Type': 'application/json'
+                  }}
+          );
+  }
+
   registrarDetallePedido(id, datosTabla:any[]){
     let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/orden_pedido_detalle_com`;
     let productosARegistrar = datosTabla.map(
