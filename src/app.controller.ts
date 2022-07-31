@@ -65,13 +65,17 @@ export class AppController {
   @Post('scm')
     transformarDireccionyDetalle(@Body() body, @Res() response: Response){
       const direccionEntrega = `${body.direccionEspecifica}, ${body.ciudad}, ${body.provincia}`;
-      console.log(body.comprobanteSubido);
       let detalleProductos = {
           "pavita":0,
           "mediano": 0,
           "grande": 0,
           "extraGrande": 0,
-          "extra2Grande": 0
+          "extra2Grande": 0,
+          "precio_pavita":0,
+          "precio_mediano": 0,
+          "precio_grande": 0,
+          "precio_extraGrande": 0,
+          "precio_extra2Grande": 0
       };
       this.appService.leerDetallePedido(body.idPedido)
           .subscribe(
@@ -104,7 +108,39 @@ export class AppController {
                       this.appService.generarOrdenEntrega(body.idPedido, body.restarStock == "true")
                           .subscribe({
                               complete: ()=>{
-                                  response.status(200).send({direccionEntrega, ...detalleProductos});
+                                  this.appService.leerPrecioProductos()
+                                      .subscribe(
+                                          {
+                                              next: valores => {
+                                                  let infoProductos:any[] = valores.data;
+                                                  infoProductos
+                                                      .forEach(
+                                                          (producto) => {
+                                                              let codigoProducto:string = producto.codigo;
+                                                              switch (codigoProducto){
+                                                                  case "PAV001":
+                                                                      detalleProductos.precio_pavita = producto.precio_unitario;
+                                                                      break;
+                                                                  case "PAV002":
+                                                                      detalleProductos.precio_mediano = producto.precio_unitario;
+                                                                      break;
+                                                                  case "PAV003":
+                                                                      detalleProductos.precio_grande = producto.precio_unitario;
+                                                                      break;
+                                                                  case "PAV004":
+                                                                      detalleProductos.precio_extraGrande = producto.precio_unitario;
+                                                                      break;
+                                                                  case "PAV005":
+                                                                      detalleProductos.precio_extra2Grande = producto.precio_unitario;
+                                                                      break;
+                                                              }
+                                                          }
+                                                      );
+                                                  response.status(200).send({direccionEntrega, ...detalleProductos});
+                                              }
+                                          }
+                                      );
+
                               }
                           })
                   }

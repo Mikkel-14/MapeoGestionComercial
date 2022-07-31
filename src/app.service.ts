@@ -236,5 +236,16 @@ export class AppService {
           });
       }
   }
+
+  leerPrecioProductos(){
+      let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/list?dbase=catalogo_productos_com`;
+      return this.httpClient
+          .get(
+            url,
+      {headers: {
+              'Content-Type': 'application/json'
+             }}
+          );
+  }
 }
 
