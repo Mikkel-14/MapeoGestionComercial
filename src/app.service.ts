@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {HttpService} from "@nestjs/axios";
 import {Observable, Subject} from "rxjs";
+import * as hb from 'handlebars';
+import * as fs from "fs";
 
 @Injectable()
 export class AppService {
@@ -27,6 +29,17 @@ export class AppService {
 
   leerPedido(idPedido){
       let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/orden_pedido_com?paramName=Id&paramValue=${idPedido}`;
+      return this.httpClient
+          .get(
+              url,
+              {headers:{
+                      'Content-Type': 'application/json'
+                  }}
+          );
+  }
+
+  leerCliente(idCliente){
+      let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/cliente_com?paramName=Id&paramValue=${idCliente}`;
       return this.httpClient
           .get(
               url,
@@ -259,6 +272,79 @@ export class AppService {
               'Content-Type': 'application/json'
              }}
           );
+  }
+
+  generarFactura(idPedido, costoDelivery,fechaEmision){
+      return new Promise((res, rej) =>{
+          this.leerPedido(idPedido)
+              .subscribe({
+                  next: value => {
+                      let idCliente = value.data.ruc_cliente;
+                      this.leerCliente(idCliente).subscribe({
+                         next: value =>{
+                             let informacionCliente = value.data;
+                             this.leerDetallePedido(idPedido).subscribe({
+                                 next: value => {
+                                     let informacionPedido:any[] = value.data;
+                                     let detallePedido = informacionPedido.map(
+                                         (detalle) => {
+                                             let total = +detalle["cantidad_producto"] * +detalle["precio_producto"];
+                                             return {
+                                                 codigo: detalle["codigo_producto"],
+                                                 nombre: detalle["nombre_producto"],
+                                                 cantidad: detalle["cantidad_producto"],
+                                                 precioU: detalle["precio_producto"],
+                                                 precioT: total
+                                             }
+                                         }
+                                     );
+                                     detallePedido.push({
+                                         codigo: "SD0001",
+                                         nombre: "Servicio de delivery",
+                                         cantidad: 1,
+                                         precioU: costoDelivery,
+                                         precioT: +costoDelivery
+                                     });
+                                     let subtotal = detallePedido
+                                         .map(
+                                         producto => producto.precioT
+                                         )
+                                         .reduce(
+                                             (acc, cur) => {
+                                                 return acc + cur
+                                             },
+                                             0
+                                         );
+                                     let impuestos = subtotal * 0.12;
+                                     let total = subtotal + impuestos;
+                                     let contextoFactura = {
+                                         nombre_cliente: informacionCliente.nombre_razonSocial,
+                                         id_pedido: idPedido,
+                                         direccion: informacionCliente.direccion,
+                                         fecha: fechaEmision,
+                                         ruc_cliente: informacionCliente.ruc,
+                                         telefono: informacionCliente.telefono,
+                                         tabla: detallePedido,
+                                         subtotal,
+                                         impuesto: impuestos,
+                                         total
+                                     };
+                                     fs.promises.readFile("./templates/factura.hbs",'utf-8')
+                                         .then((valor) => {
+                                             let plantilla = hb.compile(valor);
+                                             res({
+                                                 factura:plantilla(contextoFactura),
+                                                 correoDestinatario: informacionCliente.email,
+                                                 numeroPedido: idPedido
+                                             });
+                                         })
+                                 }
+                             });
+                         }
+                      });
+                  }
+              });
+      })
   }
 }
 

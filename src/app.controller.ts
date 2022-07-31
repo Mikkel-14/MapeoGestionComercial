@@ -1,10 +1,12 @@
 import {Body, Controller, Get, Param, Post, Res} from '@nestjs/common';
 import { AppService } from './app.service';
 import {Response} from "express";
+import {MailService} from "./mail-service/mail.service";
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService,
+              private readonly mailService: MailService) {}
 
   @Post('pedido')
   creacionPedido(@Body() body, @Res() response: Response) {
@@ -155,6 +157,24 @@ export class AppController {
                               }
                           })
                   }
+              }
+          );
+  }
+
+  @Post('factura/:idPedido')
+    enviarFactura(@Res() response: Response, @Param() params, @Body() body){
+      this.appService.generarFactura(params.idPedido, body.costoDelivery, body.fecha)
+          .then(valor =>{
+              return this.mailService.enviarFactura(valor["factura"],valor["correoDestinatario"],valor["numeroPedido"])
+          })
+          .then(
+              resultado => {
+                  response.status(200).send();
+              }
+          )
+          .catch(
+              (error) => {
+                  console.log("Error al enviar el correo", error)
               }
           );
   }

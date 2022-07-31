@@ -1,0 +1,179 @@
+<html>
+    <head>
+        <style>
+            html {
+                width: 700px;
+            }
+            div {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: large;
+            }
+            .contenedor{
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+            }
+            .encabezado{
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 3px solid #6369E5;
+            }
+            .titulo{
+                color: #6369E5;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 50px;
+            }
+            .informacion-empresa{
+                font-size: small;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+            }
+            .informacion-cliente{
+                width: 100%;
+                padding: 5px 0px;
+            }
+            .clave-cabecera{
+                color: #6369E5;
+                font-weight:bold;
+            }
+            .column {
+                float: left;
+                width: 50%;
+            }
+
+            .row::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            .row{
+                width: 100%;
+                padding: 2px 0px;
+            }
+
+            table{
+                width: 100%;
+                border-color: #DDDDDD;
+            }
+            th,td{
+                text-align: center;
+                vertical-align: middle;
+                padding-top: 3px;
+                padding-bottom: 3px;
+                border-bottom: 1px solid #ddd;
+            }
+            th{
+                color: #6369E5;
+                background-color:   #deecfa;
+            }
+            td{
+                text-align: left; 
+            }
+            .articulo{
+                width: 35%;
+            }
+            .clave-cabecera{
+                text-align: right; 
+            }
+            .totales{
+                background-color:#deecfa;
+                color: #6369E5;
+                font-weight:bold;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <div class="contenedor">
+            <div class="encabezado">
+                <div class="informacion-empresa">
+                    <a>Pronaca</a>
+                    <a>Los Naranjos N44-15 Av. de Los Granados</a>
+                    <a>1790319857001</a>
+                </div>
+                <div class="titulo">
+                    Factura   
+                </div>
+            </div>
+            <br>
+            <div class="informacion-cliente">
+                <div class="row">
+                    <div class="column"> 
+                        <span class="clave-cabecera">Cliente</span>
+                        <span>{{nombre_cliente}}</span>
+                    </div>
+                    <div class="column">
+                        <span class="clave-cabecera">N° factura</span>
+                        <span>{{id_pedido}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column"> 
+                        <span class="clave-cabecera">Dirección</span>
+                        <span>{{direccion}}</span>
+                    </div>
+                    <div class="column">
+                        <span class="clave-cabecera">Fecha</span>
+                        <span>{{fecha}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column"> 
+                        <span class="clave-cabecera">RUC</span>
+                        <span>{{ruc_cliente}}</span>
+                    </div>
+                    <div class="column">
+                        <span class="clave-cabecera">Teléfono</span>
+                        <span>{{telefono}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+        <br>
+        
+            <table>
+                <tr>
+                    <th>CÓDIGO</th>
+                    <th class="articulo">ARTÍCULO</th>
+                    <th>CANTIDAD</th>
+                    <th>PRECIO UNITARIO</th>
+                    <th>TOTAL</th>
+                </tr>
+                {{#each tabla}}
+                    <tr>
+                        <td>{{this.codigo}}</td>
+                        <td>{{this.nombre}}</td>
+                        <td>{{this.cantidad}}</td>
+                        <td>{{this.precioU}}</td>
+                        <td>{{this.precioT}}</td>
+                    </tr>
+                {{/each}}
+
+                <tr>
+                    <td colspan="4" class="clave-cabecera">Subtotal</td>
+                    <td class="totales">${{subtotal}}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="clave-cabecera">IVA(12%)</td>
+                    <td class="totales">${{impuesto}}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="clave-cabecera">Total factura</td>
+                    <td class="totales">${{total}}</td>
+                </tr>
+            </table>
+        </div>
+        
+    </body>
+</html>
+
