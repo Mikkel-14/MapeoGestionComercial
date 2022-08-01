@@ -179,4 +179,26 @@ export class AppController {
           );
   }
 
+  @Post('resumen-semanal')
+    generarReporteDeVentas(@Res() response: Response, @Body() body){
+      this.appService.leerObservaciones()
+          .subscribe({
+              next: value => {
+                  let observaciones: ObservacionInterface[] = value.data;
+                  this.appService.crearReporteObservaciones(observaciones)
+                      .then( reporteGenerado =>{
+                          return this.mailService.enviarReporte(reporteGenerado, body.email)
+                      })
+                      .then(value =>{
+                          this.appService.actualizarObservaciones(observaciones)
+                              .subscribe({
+                                  complete: () => {
+                                      response.status(200).send();
+                                  }
+                              });
+                      });
+              }
+          });
+  }
+
 }

@@ -20,4 +20,13 @@ export class MailService {
             subject: `Factura pedido #${numeroPedido}`
         });
     }
+
+    async enviarReporte(reporte, correo){
+        return await this.transporter.sendMail({
+            from: "gcomercial-pronaca@outlook.com",
+            to: correo,
+            html: reporte,
+            subject: "Reporte semanal de observaciones de entrega"
+        });
+    }
 }

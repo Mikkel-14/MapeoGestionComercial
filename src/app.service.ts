@@ -346,5 +346,108 @@ export class AppService {
               });
       })
   }
+
+  leerObservaciones(){
+      let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/list?dbase=observaciones_entrega_com&paramName=estado&paramValue=sin_revisar`;
+      return this.httpClient
+          .get(
+              url,
+              {headers:{
+                      'Content-Type': 'application/json'
+                  }}
+          );
+  }
+
+  actualizarObservaciones(observaciones:ObservacionInterface[]){
+      const CABECERAS_ACTUALIZACION = {headers:{
+              'Content-Type': 'application/json',
+              'X-Api-Key': this.apiKey,
+              'X-Username': 'cesar.leon03@epn.edu.ec'
+          }};
+      let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/observaciones_entrega_com/update?withInsert=false`;
+      let controladorDeRegistro = new Subject();
+      let solicitudesActualizacion = observaciones.map(
+          obs => {
+              return this.httpClient
+                  .put(
+                      url,
+                      {
+                          "Id": obs.Id,
+                          "estado": "revisado"
+                      },
+                      CABECERAS_ACTUALIZACION
+                  )
+          }
+      )
+      this.actualizacionRecursivaObservaciones(solicitudesActualizacion,controladorDeRegistro);
+      return controladorDeRegistro;
+  }
+
+  private actualizacionRecursivaObservaciones(actualizaciones:Observable<any>[], controlador:Subject<any>){
+      if(actualizaciones.length == 0) {
+          controlador.complete();
+      }
+      else {
+          let peticionActualizacion = actualizaciones.pop();
+          peticionActualizacion.subscribe({
+              next: value=> {
+                  this.actualizacionRecursivaObservaciones(actualizaciones, controlador);
+              }
+          });
+      }
+
+  }
+
+  async crearReporteObservaciones(observaciones:ObservacionInterface[]){
+      let totalObservacionesRecibidas = observaciones.length;
+      let observaciones7 = observaciones.filter(
+          observacion => {
+              return observacion.calificacion == '7'
+          }
+      ).length;
+      let observaciones6 = observaciones.filter(
+          observacion => {
+              return observacion.calificacion == '6'
+          }
+      ).length;
+      let observaciones5 = observaciones.filter(
+          observacion => {
+              return observacion.calificacion == '5'
+          }
+      ).length;
+      let observaciones4 = observaciones.filter(
+          observacion => {
+              return observacion.calificacion == '4'
+          }
+      ).length;
+      let observaciones3 = observaciones.filter(
+          observacion => {
+              return observacion.calificacion == '3'
+          }
+      ).length;
+      let observaciones2 = observaciones.filter(
+          observacion => {
+              return observacion.calificacion == '2'
+          }
+      ).length;
+      let observaciones1 = observaciones.filter(
+          observacion => {
+              return observacion.calificacion == '1'
+          }
+      ).length;
+      let datosObservaciones = {
+          totalObs: totalObservacionesRecibidas,
+          p7: 100*observaciones7/totalObservacionesRecibidas,
+          p6: 100*observaciones6/totalObservacionesRecibidas,
+          p5: 100*observaciones5/totalObservacionesRecibidas,
+          p4: 100*observaciones4/totalObservacionesRecibidas,
+          p3: 100*observaciones3/totalObservacionesRecibidas,
+          p2: 100*observaciones2/totalObservacionesRecibidas,
+          p1: 100*observaciones1/totalObservacionesRecibidas,
+      }
+      let plantilla = await fs.promises.readFile("./templates/reporteObs.hbs",'utf-8')
+      let plantillaCompilada = hb.compile(plantilla);
+      return plantillaCompilada(datosObservaciones);
+  }
 }
 

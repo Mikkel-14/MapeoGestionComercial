@@ -1,0 +1,105 @@
+<html>
+
+<head>
+    <style>
+
+        .column {
+            float: left;
+            width: 20%;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        .tabla{
+            width:70%;
+            border:1px;
+            border-color: black;
+            height: 40%;
+
+        }
+
+        tr{
+            background-color: #eeeeee;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        td{
+            padding-left: 12px;
+        }
+
+        tr.encabezado{
+            background-color: #9da1eb;
+        }
+
+        a{
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: x-large;
+            font-weight: bold;
+        }
+
+        .bold{
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+<br>
+<a> REPORTE DE OBSERVACIONES DE VENTAS </a>
+<hr/>
+<br>
+
+
+<table class="tabla">
+
+    <tr class = "encabezado">
+        <th colspan="2">Total observaciones:</th>
+        <th colspan="2">{{totalObs}}</th>
+    </tr>
+
+
+    <tr>
+        <td colspan="2" align="left">Total calificaciones 7 estrellas </td>
+        <td colspan="2" class="bold">{{p7}}% </td>
+    </tr>
+
+
+    <tr>
+        <td colspan="2"  align="left"> Total calificaciones 6 estrellas</td>
+        <td colspan="2"  class="bold">{{p6}}% </td>
+    </tr>
+
+    <tr>
+        <td colspan="2" align="left"> Total calificaciones 5 estrellas</td>
+        <td colspan="2" class="bold">{{p5}}% </td>
+    </tr>
+
+    <tr>
+        <td colspan="2" align="left"> Total calificaciones 4 estrellas</td>
+        <td colspan="2" class="bold">{{p4}}% </td>
+    </tr>
+
+    <tr>
+        <td colspan="2" align="left"> Total calificaciones 3 estrellas</td>
+        <td colspan="2" class="bold">{{p3}}% </td>
+    </tr>
+
+    <tr>
+        <td colspan="2" align="left"> Total calificaciones 2 estrellas</td>
+        <td colspan="2" class="bold">{{p2}}% </td>
+    </tr>
+
+    <tr>
+        <td colspan="2" align="left"> Total calificaciones 1 estrellas</td>
+        <td colspan="2" class="bold">{{p1}}% </td>
+    </tr>
+
+</table>
+</body>
+</html>
