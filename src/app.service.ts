@@ -449,5 +449,30 @@ export class AppService {
       let plantillaCompilada = hb.compile(plantilla);
       return plantillaCompilada(datosObservaciones);
   }
+
+  async registrarDetalleServicio(idPedido, costoServicio){
+      let url = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/orden_pedido_detalle_servicio_com`;
+      return new Promise((res, rej) => {
+        let resultadoRegistro$ = this.httpClient.put(
+            url,
+            {
+                id_pedido: idPedido,
+                nombre_servicio: "Servicio de delivery",
+                precio: costoServicio
+            },
+            {headers:{
+                    'Content-Type': 'application/json',
+                    'X-Api-Key': this.apiKey,
+                    'X-Username': 'cesar.leon03@epn.edu.ec'
+            }}
+        );
+
+        resultadoRegistro$.subscribe({
+            next: resultado => {
+                res(resultado);
+            }
+        });
+      })
+  }
 }
 

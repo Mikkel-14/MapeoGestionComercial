@@ -168,6 +168,11 @@ export class AppController {
               return this.mailService.enviarFactura(valor["factura"],valor["correoDestinatario"],valor["numeroPedido"])
           })
           .then(
+              resultado =>{
+                  return this.appService.registrarDetalleServicio(params.idPedido, body.costoDelivery)
+              }
+          )
+          .then(
               resultado => {
                   response.status(200).send();
               }
