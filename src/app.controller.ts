@@ -206,4 +206,10 @@ export class AppController {
           });
   }
 
+  @Post('reportes')
+    generacionReportes(@Res() response: Response, @Body() body){
+      console.log(body);
+      response.status(200).send();
+  }
+
 }
