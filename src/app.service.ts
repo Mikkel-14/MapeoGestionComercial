@@ -474,5 +474,33 @@ export class AppService {
         });
       })
   }
+
+  async consolidarReporte(infoR:MetadatosReporteInterface){
+      let urlBaseDetallePedidos = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/list?dbase=orden_pedido_detalle_com`;
+      let urlBaseDetalleServicio = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/list?dbase=orden_pedido_detalle_servicio_com`
+      return new Promise((resolve,reject)=>{
+        if(infoR.tipo == "Servicios"){
+            let consultaBatchServicios$ = this.httpClient.get(
+                urlBaseDetalleServicio,
+                {headers:{
+                        'Content-Type': 'application/json',
+                    }}
+            );
+            consultaBatchServicios$.subscribe({
+                next: rawData => {
+                    let listaServicios = rawData.data;
+                    console.log(listaServicios);
+                }
+            });
+        }
+        else
+        {
+            //codigo para productos
+        }
+      });
+
+
+  }
 }
+
 
