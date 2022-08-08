@@ -208,7 +208,9 @@ export class AppController {
 
   @Post('reportes')
     generacionReportes(@Res() response: Response, @Body() body){
+      console.log(body);
       let metadatosReporte = body as MetadatosReporteInterface;
+      console.log(metadatosReporte);
       this.appService.consolidarReporte(metadatosReporte)
           .then(resultado =>{
               response.status(200).send({tabla: resultado});
