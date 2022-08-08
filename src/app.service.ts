@@ -481,7 +481,6 @@ export class AppService {
         let urlCabecerasPedido =`https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/list?dbase=orden_pedido_com`;
         let urlBaseDetalleServicio = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/list?dbase=orden_pedido_detalle_servicio_com`
         return new Promise((resolve,reject)=>{
-            console.log(infoR); //TODO
             //consulta de las cabeceras del pedido
             let consultaCabeceras$ = this.httpClient.get(
                 urlCabecerasPedido,
@@ -571,11 +570,58 @@ export class AppService {
                                 resolve(detalleReporte);
                             }
                         });
-
                     }
                     else
                     {
                         //codigo para productos
+                        let consultaBatchDetalle$ = this.httpClient.get(
+                            urlBaseDetallePedidos,
+                            {headers:{
+                                    'Content-Type': 'application/json',
+                                }}
+                        );
+                        consultaBatchDetalle$.subscribe({
+                            next: rawData => {
+                                let listaProductos = rawData.data as any[];
+                                let detalleReporte = listaProductos.filter(
+                                    (elementoSinEstdo) => {
+                                        return identificadoresFactValidos.includes(elementoSinEstdo.id_pedido)
+                                    }
+                                ).filter( //filtro de fechas
+                                    (elemento) =>{
+                                        if(infoR.tieneFecha == 'true'){
+                                            //aqui filtramos las cabeceras para luego filtrar la lista
+                                            return cabecerasFechas.includes(elemento.id_pedido);
+                                        }
+                                        return elemento;
+                                    }
+                                ).filter(
+                                    (elemento) => {//filtro de usuarios
+                                        if(infoR.tieneCliente == 'true'){
+                                            return cabeceraPorUsuario.includes(elemento.id_pedido)
+                                        }
+                                        return elemento;
+                                    }
+                                ).filter( //filtro por producto
+                                    (elemento) => {
+                                        if(infoR.codProd){
+                                            return elemento.codigo_producto == infoR.codProd;
+                                        }
+                                        return elemento
+                                    }
+                                ).map(
+                                    (elementoFiltrado) => {
+                                        return {
+                                            "Numero Factura": elementoFiltrado.id_pedido,
+                                            "Nombre item": elementoFiltrado.nombre_producto,
+                                            "Cantidad": elementoFiltrado.cantidad_producto,
+                                            "Precio total": elementoFiltrado.precio_producto
+                                        }
+                                    }
+                                );
+                                resolve(detalleReporte);
+                            }
+                        });
                     }
 
                 }
