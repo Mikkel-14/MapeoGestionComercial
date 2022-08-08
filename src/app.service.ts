@@ -615,7 +615,7 @@ export class AppService {
                                             "Numero Factura": elementoFiltrado.id_pedido,
                                             "Nombre item": elementoFiltrado.nombre_producto,
                                             "Cantidad": elementoFiltrado.cantidad_producto,
-                                            "Precio total": elementoFiltrado.precio_producto
+                                            "Precio total": +elementoFiltrado.precio_producto * +elementoFiltrado.cantidad_producto
                                         }
                                     }
                                 );
