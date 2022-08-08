@@ -481,6 +481,7 @@ export class AppService {
         let urlCabecerasPedido =`https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/list?dbase=orden_pedido_com`;
         let urlBaseDetalleServicio = `https://app.flokzu.com/flokzuopenapi/api/${this.apiKey}/database/list?dbase=orden_pedido_detalle_servicio_com`
         return new Promise((resolve,reject)=>{
+            console.log(infoR); //TODO
             //consulta de las cabeceras del pedido
             let consultaCabeceras$ = this.httpClient.get(
                 urlCabecerasPedido,
@@ -496,6 +497,7 @@ export class AppService {
                             return elemento.estado == 'confirmado';
                         }
                     )
+                    console.log(cabecerasValidas) //TODO
                     let identificadoresFactValidos = cabecerasValidas.map(
                         (elemento) => {
                             return elemento.Id;
