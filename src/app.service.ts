@@ -497,7 +497,6 @@ export class AppService {
                             return elemento.estado == 'confirmado';
                         }
                     )
-                    console.log(cabecerasValidas) //TODO
                     let identificadoresFactValidos = cabecerasValidas.map(
                         (elemento) => {
                             return elemento.Id;
