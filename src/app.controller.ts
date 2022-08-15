@@ -211,7 +211,6 @@ export class AppController {
       let metadatosReporte = body as MetadatosReporteInterface;
       this.appService.consolidarReporte(metadatosReporte)
           .then(resultado =>{
-              console.log(body)
               response.status(200).send({tabla: resultado});
           });
 

@@ -491,7 +491,6 @@ export class AppService {
             consultaCabeceras$.subscribe({
                 next: rawHeaders =>{
                     let datosCabeceras = rawHeaders.data as any[];
-                    console.log(datosCabeceras);
                     let cabecerasValidas = datosCabeceras.filter(
                         (elemento) => {
                             return elemento.estado == 'confirmado';
@@ -508,9 +507,6 @@ export class AppService {
                                 let fechaInicio = new Date(infoR.fecha_ini);
                                 let fechaFin = new Date(infoR.fecha_fin);
                                 let fechaCabecera = new Date(elemento.fecha_entrega);
-                                console.log("Fecha Cabecera:", fechaCabecera);
-                                console.log("Fecha Fin:", fechaFin)
-                                console.log("Fecha Inicio:", fechaInicio)
                                 return (fechaCabecera.getTime() <= fechaFin.getTime()) && (fechaCabecera.getTime() >= fechaInicio.getTime())
                             }
                             return elemento;
