@@ -491,6 +491,7 @@ export class AppService {
             consultaCabeceras$.subscribe({
                 next: rawHeaders =>{
                     let datosCabeceras = rawHeaders.data as any[];
+                    console.log(datosCabeceras);
                     let cabecerasValidas = datosCabeceras.filter(
                         (elemento) => {
                             return elemento.estado == 'confirmado';
