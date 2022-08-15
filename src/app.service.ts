@@ -18,7 +18,8 @@ export class AppService {
             "provincia": datosCliente.provincia,
             "direccion": datosCliente.direccion,
             "fecha_entrega": datosCliente.fechaEntrega,
-            "estado": "sin_confirmar"
+            "estado": "sin_confirmar",
+            "fecha_registro": datosCliente.fechaRegistro
         };
         return this.httpClient.put(url,registroBase,{headers:{
                 'Content-Type': 'application/json',
@@ -506,7 +507,7 @@ export class AppService {
                             if(infoR.tieneFecha == 'true') {
                                 let fechaInicio = new Date(infoR.fecha_ini);
                                 let fechaFin = new Date(infoR.fecha_fin);
-                                let fechaCabecera = new Date(elemento.fecha_entrega);
+                                let fechaCabecera = new Date(elemento.fecha_registro);
                                 return (fechaCabecera.getTime() <= fechaFin.getTime()) && (fechaCabecera.getTime() >= fechaInicio.getTime())
                             }
                             return elemento;
@@ -516,7 +517,6 @@ export class AppService {
                             return elementoFiltrado.Id;
                         }
                     );
-                    console.log(cabecerasFechas);
                     let cabeceraPorUsuario = cabecerasValidas.filter(
                         (elemento) => {
                             if(infoR.tieneCliente == 'true'){
