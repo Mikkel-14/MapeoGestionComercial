@@ -507,9 +507,9 @@ export class AppService {
                                 let fechaInicio = new Date(infoR.fecha_ini);
                                 let fechaFin = new Date(infoR.fecha_fin);
                                 let fechaCabecera = new Date(elemento.fecha_entrega);
-                                console.log("Fecha Cabecera:", fechaCabecera.getTime());
-                                console.log("Fecha Fin:", fechaFin.getTime())
-                                console.log("Fecha Inicio:", fechaInicio.getTime())
+                                console.log("Fecha Cabecera:", fechaCabecera);
+                                console.log("Fecha Fin:", fechaFin)
+                                console.log("Fecha Inicio:", fechaInicio)
                                 return (fechaCabecera.getTime() <= fechaFin.getTime()) && (fechaCabecera.getTime() >= fechaInicio.getTime())
                             }
                             return elemento;
